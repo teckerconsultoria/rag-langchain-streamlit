@@ -1,0 +1,78 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Streamlit
+.streamlit/secrets.toml
+.streamlit/config.toml
+
+# Virtual Environment
+venv/
+ENV/
+env/
+.env
+
+# FAISS index files
+faiss_index/
+*.index
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# OpenAI API key and other sensitive information
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# PDF files (optional, uncomment if you don't want to track PDF files)
+# *.pdf
+
+# Large data files
+*.csv
+*.xlsx
+*.parquet
+*.db
+*.sqlite
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Distribution / packaging
+.Python

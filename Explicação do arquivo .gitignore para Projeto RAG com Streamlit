@@ -1,0 +1,117 @@
+# Explicação do arquivo .gitignore para Projeto RAG com Streamlit
+
+Este documento explica os padrões incluídos no arquivo `.gitignore` e por que eles são importantes para o seu projeto RAG com Streamlit, FAISS e OpenAI.
+
+## Categorias de Arquivos Ignorados
+
+### 1. Arquivos Python
+```
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+```
+Estes padrões ignoram arquivos de bytecode Python compilados e arquivos relacionados a pacotes/distribuição que são gerados automaticamente e não devem ser versionados.
+
+### 2. Arquivos de Configuração do Streamlit
+```
+.streamlit/secrets.toml
+.streamlit/config.toml
+```
+O arquivo `secrets.toml` contém informações sensíveis como chaves de API e credenciais que nunca devem ser compartilhadas. O `config.toml` contém configurações específicas do ambiente que podem variar entre desenvolvedores.
+
+### 3. Ambientes Virtuais
+```
+venv/
+ENV/
+env/
+.env
+```
+Diretórios de ambiente virtual Python que contêm pacotes instalados localmente. Estes são específicos para cada ambiente de desenvolvimento e não devem ser versionados.
+
+### 4. Arquivos de Índice FAISS
+```
+faiss_index/
+*.index
+```
+Arquivos de índice FAISS que são gerados a partir dos documentos processados. Estes podem ser grandes e são reconstruíveis a partir dos dados originais.
+
+### 5. Arquivos Temporários
+```
+*.tmp
+*.temp
+temp/
+tmp/
+```
+Arquivos temporários criados durante a execução da aplicação que não precisam ser versionados.
+
+### 6. Logs
+```
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+```
+Arquivos de log que são gerados durante a execução e não são necessários para o controle de versão.
+
+### 7. Arquivos Específicos de IDE
+```
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+```
+Configurações específicas de ambiente de desenvolvimento integrado (IDE) que são pessoais para cada desenvolvedor.
+
+### 8. Informações Sensíveis
+```
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+```
+Arquivos de variáveis de ambiente que contêm informações sensíveis como chaves de API.
+
+### 9. Arquivos de Dados Grandes
+```
+*.csv
+*.xlsx
+*.parquet
+*.db
+*.sqlite
+```
+Arquivos de dados que podem ser grandes e não são adequados para controle de versão. Estes devem ser armazenados separadamente ou reconstruídos a partir de fontes originais.
+
+### 10. Jupyter Notebook
+```
+.ipynb_checkpoints
+```
+Arquivos de checkpoint de Jupyter Notebook que são temporários e específicos para cada sessão.
+
+## Observações Importantes
+
+1. **PDFs**: O padrão para ignorar arquivos PDF está comentado (`# *.pdf`). Você pode descomentar esta linha se não quiser incluir PDFs no seu repositório. No entanto, para fins de teste, pode ser útil manter alguns PDFs de exemplo no repositório.
+
+2. **Personalização**: Este arquivo `.gitignore` é abrangente, mas você pode personalizá-lo de acordo com as necessidades específicas do seu projeto.
+
+3. **Arquivos Grandes**: Se você precisar compartilhar arquivos grandes (como modelos ou índices), considere usar Git LFS (Large File Storage) ou armazenar esses arquivos em um serviço de armazenamento em nuvem.
+
+4. **Segurança**: Certifique-se de que este arquivo `.gitignore` esteja em vigor antes de fazer o primeiro commit para evitar o compartilhamento acidental de informações sensíveis.
