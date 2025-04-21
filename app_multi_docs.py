@@ -311,8 +311,30 @@ def main():
                             
                             with st.expander("Ver fontes"):
                                 for i, source in enumerate(response_data["sources"]):
-                                    st.markdown(f"**Trecho {i+1}:** De '{source['metadata'].get('doc_name', 'Desconhecido')}' (Score: {source['score']:.4f})")
-                                    st.markdown(f"*{source['content'][:200]}...*")
+                                    # Acesso seguro aos metadados
+                                    doc_name = "Desconhecido"
+                                    if isinstance(source, dict):
+                                        # Verificar se metadata existe e é um dicionário
+                                        if "metadata" in source and isinstance(source["metadata"], dict):
+                                            doc_name = source["metadata"].get("doc_name", "Desconhecido")
+                                        # Caso alternativo: verificar se doc_name está diretamente no source
+                                        elif "doc_name" in source:
+                                            doc_name = source["doc_name"]
+                                    
+                                    # Acesso seguro ao score
+                                    score = 0.0
+                                    if isinstance(source, dict) and "score" in source:
+                                        score = source["score"]
+                                    
+                                    st.markdown(f"**Trecho {i+1}:** De '{doc_name}' (Score: {score:.4f})")
+                                    
+                                    # Acesso seguro ao conteúdo
+                                    content = ""
+                                    if isinstance(source, dict) and "content" in source:
+                                        content = source["content"]
+                                    
+                                    if content:
+                                        st.markdown(f"*{content[:200]}...*")
     
     # Aba de histórico
     with tab4:
@@ -340,8 +362,18 @@ def main():
                     st.markdown(item["response"])
                     
                     st.markdown("### Fontes:")
-                    for j, source in enumerate(item["sources"]):
-                        st.markdown(f"**Trecho {j+1}:** {source['title']} (Score: {source['score']:.4f})")
+                    for j, source in enumerate(item.get("sources", [])):
+                        # Acesso seguro aos dados da fonte no histórico
+                        title = "Desconhecido"
+                        score = 0.0
+                        
+                        if isinstance(source, dict):
+                            if "title" in source:
+                                title = source["title"]
+                            if "score" in source:
+                                score = source["score"]
+                        
+                        st.markdown(f"**Trecho {j+1}:** {title} (Score: {score:.4f})")
     
     # Rodapé
     st.markdown("""
