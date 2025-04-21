@@ -1,0 +1,8 @@
+libmupdf-dev
+libfreetype6-dev
+libjpeg-dev
+libharfbuzz-dev
+libffi-dev
+libjbig2dec0-dev
+libopenjp2-7-dev
+libssl-dev
