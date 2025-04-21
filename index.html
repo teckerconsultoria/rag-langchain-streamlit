@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplicação RAG com LangChain, FAISS e OpenAI</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-section">
+                <h3>Configurações</h3>
+                <div class="form-group">
+                    <label for="api-key">Chave da API OpenAI</label>
+                    <input type="password" id="api-key" value="sk-••••••••••••••••••••••••••••••••" readonly>
+                </div>
+            </div>
+            
+            <div class="sidebar-section">
+                <h3>Informações</h3>
+                <div class="info-box success">
+                    <p>Documento processado: <strong>artigo_cientifico.pdf</strong></p>
+                </div>
+                <div class="info-box info">
+                    <p>Número de chunks: <strong>12</strong></p>
+                </div>
+                <button class="btn btn-secondary btn-full">Limpar Sessão</button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <header>
+                <h1>📚 Aplicação RAG com LangChain, FAISS e OpenAI</h1>
+                <p class="description">Esta aplicação permite fazer upload de documentos PDF e fazer perguntas sobre seu conteúdo. O sistema usa LangChain, FAISS e OpenAI para processar o documento, indexar seu conteúdo e gerar respostas.</p>
+            </header>
+
+            <!-- Tabs -->
+            <div class="tabs">
+                <div class="tab-buttons">
+                    <button class="tab-btn" data-tab="upload">Upload de Documento</button>
+                    <button class="tab-btn active" data-tab="query">Consulta</button>
+                    <button class="tab-btn" data-tab="history">Histórico</button>
+                </div>
+
+                <!-- Upload Tab Content -->
+                <div class="tab-content" id="upload-tab">
+                    <h2>Upload de Documento PDF</h2>
+                    <p>Faça upload de um documento PDF para processamento e indexação.</p>
+                    
+                    <div class="upload-area">
+                        <div class="file-input-container">
+                            <input type="file" id="file-upload" accept=".pdf" class="file-input">
+                            <label for="file-upload" class="file-label">Escolher arquivo PDF</label>
+                            <span class="file-name">Nenhum arquivo selecionado</span>
+                        </div>
+                        <button class="btn btn-primary">Processar PDF</button>
+                    </div>
+                </div>
+
+                <!-- Query Tab Content -->
+                <div class="tab-content active" id="query-tab">
+                    <h2>Consulta ao Documento</h2>
+                    <p>Faça perguntas sobre o documento: <strong>artigo_cientifico.pdf</strong></p>
+                    
+                    <div class="query-area">
+                        <div class="form-group">
+                            <input type="text" id="query-input" placeholder="Digite sua pergunta" value="Quais são os principais métodos de RAG mencionados no documento?">
+                            <button class="btn btn-primary">Enviar</button>
+                        </div>
+                    </div>
+
+                    <div class="response-area">
+                        <h3>Resposta:</h3>
+                        <div class="response-content">
+                            <p>De acordo com o documento, os principais métodos de RAG (Retrieval-Augmented Generation) mencionados são:</p>
+                            
+                            <ol>
+                                <li><strong>Embedding-based Retrieval</strong>: Utiliza embeddings vetoriais para representar documentos e consultas, permitindo busca por similaridade semântica.</li>
+                                <li><strong>Dense Passage Retrieval (DPR)</strong>: Um método que treina codificadores separados para consultas e documentos, otimizados para recuperação de informações relevantes.</li>
+                                <li><strong>Hybrid Search</strong>: Combina busca por palavras-chave (BM25) com busca semântica baseada em embeddings para melhorar a precisão da recuperação.</li>
+                                <li><strong>Re-ranking</strong>: Aplica um segundo estágio de classificação aos resultados iniciais para refinar a relevância dos documentos recuperados.</li>
+                            </ol>
+                            
+                            <p>O documento também menciona técnicas de otimização como chunking (divisão de documentos em partes menores) e indexação vetorial com FAISS para melhorar a eficiência da recuperação em grandes conjuntos de dados.</p>
+                        </div>
+
+                        <div class="sources-section">
+                            <h4>Fontes:</h4>
+                            <div class="sources-list">
+                                <div class="source-item">
+                                    <p><strong>Trecho 1:</strong> Métodos de RAG (Score: 0.8923)</p>
+                                </div>
+                                <div class="source-item">
+                                    <p><strong>Trecho 2:</strong> Técnicas de Recuperação (Score: 0.7845)</p>
+                                </div>
+                                <div class="source-item">
+                                    <p><strong>Trecho 3:</strong> Otimização de Busca (Score: 0.6721)</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- History Tab Content -->
+                <div class="tab-content" id="history-tab">
+                    <h2>Histórico de Consultas</h2>
+                    
+                    <div class="history-list">
+                        <div class="history-item">
+                            <div class="history-header" onclick="toggleHistoryItem(this)">
+                                <h4>Quais são os principais métodos de RAG mencionados no documento?</h4>
+                                <span class="toggle-icon">▼</span>
+                            </div>
+                            <div class="history-content">
+                                <h5>Resposta:</h5>
+                                <div class="response-content">
+                                    <p>De acordo com o documento, os principais métodos de RAG (Retrieval-Augmented Generation) mencionados são:</p>
+                                    
+                                    <ol>
+                                        <li><strong>Embedding-based Retrieval</strong>: Utiliza embeddings vetoriais para representar documentos e consultas, permitindo busca por similaridade semântica.</li>
+                                        <li><strong>Dense Passage Retrieval (DPR)</strong>: Um método que treina codificadores separados para consultas e documentos, otimizados para recuperação de informações relevantes.</li>
+                                        <li><strong>Hybrid Search</strong>: Combina busca por palavras-chave (BM25) com busca semântica baseada em embeddings para melhorar a precisão da recuperação.</li>
+                                        <li><strong>Re-ranking</strong>: Aplica um segundo estágio de classificação aos resultados iniciais para refinar a relevância dos documentos recuperados.</li>
+                                    </ol>
+                                    
+                                    <p>O documento também menciona técnicas de otimização como chunking (divisão de documentos em partes menores) e indexação vetorial com FAISS para melhorar a eficiência da recuperação em grandes conjuntos de dados.</p>
+                                </div>
+                                
+                                <h5>Fontes:</h5>
+                                <div class="sources-list">
+                                    <div class="source-item">
+                                        <p><strong>Trecho 1:</strong> Métodos de RAG (Score: 0.8923)</p>
+                                    </div>
+                                    <div class="source-item">
+                                        <p><strong>Trecho 2:</strong> Técnicas de Recuperação (Score: 0.7845)</p>
+                                    </div>
+                                    <div class="source-item">
+                                        <p><strong>Trecho 3:</strong> Otimização de Busca (Score: 0.6721)</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="history-item">
+                            <div class="history-header" onclick="toggleHistoryItem(this)">
+                                <h4>Como o FAISS é utilizado em aplicações RAG?</h4>
+                                <span class="toggle-icon">▼</span>
+                            </div>
+                            <div class="history-content">
+                                <h5>Resposta:</h5>
+                                <div class="response-content">
+                                    <p>O FAISS (Facebook AI Similarity Search) é utilizado em aplicações RAG das seguintes formas:</p>
+                                    
+                                    <ul>
+                                        <li><strong>Indexação eficiente de embeddings</strong>: FAISS permite armazenar e indexar grandes quantidades de vetores de embeddings de forma eficiente, possibilitando buscas rápidas mesmo em conjuntos de dados com milhões de documentos.</li>
+                                        <li><strong>Busca por similaridade</strong>: Implementa algoritmos otimizados para encontrar os vetores mais próximos (nearest neighbors) a uma consulta, essencial para recuperar os documentos mais relevantes semanticamente.</li>
+                                        <li><strong>Quantização de vetores</strong>: Oferece técnicas de compressão que reduzem o tamanho dos índices sem perda significativa de precisão, permitindo trabalhar com recursos computacionais limitados.</li>
+                                        <li><strong>Particionamento de dados</strong>: Implementa estruturas como árvores hierárquicas para dividir o espaço vetorial e acelerar as buscas em grandes conjuntos de dados.</li>
+                                    </ul>
+                                    
+                                    <p>No contexto de RAG, o FAISS é tipicamente usado após a geração de embeddings dos chunks de documentos, permitindo que a aplicação recupere rapidamente os trechos mais relevantes para uma consulta do usuário, que são então enviados como contexto para o modelo de linguagem gerar respostas precisas.</p>
+                                </div>
+                                
+                                <h5>Fontes:</h5>
+                                <div class="sources-list">
+                                    <div class="source-item">
+                                        <p><strong>Trecho 5:</strong> Indexação Vetorial (Score: 0.9124)</p>
+                                    </div>
+                                    <div class="source-item">
+                                        <p><strong>Trecho 8:</strong> Implementação FAISS (Score: 0.8567)</p>
+                                    </div>
+                                    <div class="source-item">
+                                        <p><strong>Trecho 3:</strong> Otimização de Busca (Score: 0.7102)</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="history-item">
+                            <div class="history-header" onclick="toggleHistoryItem(this)">
+                                <h4>Quais são as vantagens de usar o modelo GPT-4 em sistemas RAG?</h4>
+                                <span class="toggle-icon">▼</span>
+                            </div>
+                            <div class="history-content">
+                                <h5>Resposta:</h5>
+                                <div class="response-content">
+                                    <p>De acordo com o documento, as principais vantagens de usar o modelo GPT-4 em sistemas RAG incluem:</p>
+                                    
+                                    <ol>
+                                        <li><strong>Melhor compreensão contextual</strong>: O GPT-4 possui capacidade superior de entender o contexto dos documentos recuperados e relacioná-los adequadamente à consulta do usuário.</li>
+                                        <li><strong>Respostas mais precisas</strong>: Consegue gerar respostas mais precisas e detalhadas com base nos trechos recuperados, com menor tendência a alucinações ou informações incorretas.</li>
+                                        <li><strong>Capacidade de síntese</strong>: Excelente habilidade para sintetizar informações de múltiplos trechos de documentos em uma resposta coesa e abrangente.</li>
+                                        <li><strong>Melhor raciocínio</strong>: Demonstra capacidade superior de raciocínio ao interpretar informações técnicas complexas presentes nos documentos.</li>
+                                        <li><strong>Versatilidade de formato</strong>: Pode gerar respostas em diversos formatos (explicações, listas, tabelas) adaptando-se ao tipo de informação e à necessidade do usuário.</li>
+                                    </ol>
+                                    
+                                    <p>O documento também menciona que, apesar do custo mais elevado em comparação com modelos menores, o GPT-4 frequentemente compensa pelo aumento significativo na qualidade das respostas em aplicações RAG, especialmente para domínios complexos ou técnicos.</p>
+                                </div>
+                                
+                                <h5>Fontes:</h5>
+                                <div class="sources-list">
+                                    <div class="source-item">
+                                        <p><strong>Trecho 10:</strong> Modelos de Linguagem (Score: 0.8876)</p>
+                                    </div>
+                                    <div class="source-item">
+                                        <p><strong>Trecho 11:</strong> Comparação de Modelos (Score: 0.8234)</p>
+                                    </div>
+                                    <div class="source-item">
+                                        <p><strong>Trecho 7:</strong> Geração de Respostas (Score: 0.7654)</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <footer>
+                <p>Aplicação RAG com LangChain, FAISS e OpenAI | Desenvolvido com HTML, CSS e JavaScript</p>
+            </footer>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

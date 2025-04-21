@@ -1,0 +1,5 @@
+name: rag-app
+type: static
+env:
+  - name: OPENAI_API_KEY
+    sync: false
